@@ -7,47 +7,44 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public CardManager cardManager; //CardManager
-    [SerializeField] private GenericCard actualCard; //Carta posición actual
-    [SerializeField] private MoneyController moneyController; //Controlador del dinero del jugador
-
+    private GenericCard actualCard; //Carta posición actual
+    private MoneyController moneyController; //Controlador del dinero del jugador
+    private UIManager uiManager;
     private int playerId; //id del jugador
     private static int duration = 1; //Velocidad de movimiento
-
-    [SerializeField] private CameraManager camaraManager;
-    [SerializeField] private UIManager uiManager;
-
-
     public GameObject cameraLocation;
+    private Dictionary<String, List<PropertyCard>> listCardBought = new Dictionary<String, List<PropertyCard>>(); //Cartas compradas
+    public int CustomNumMov = 0;
+
+   
+
+    [SerializeField] private Color colorPlayer;
+    Color[] listaColores = { Color.red, Color.black , Color.blue, Color.green, Color.grey, Color.magenta };
+
 
     void Awake()
     {
         cardManager = FindObjectOfType<CardManager>(); //Obtener la instancia del CardManager
-        camaraManager = FindObjectOfType<CameraManager>(); //Obtener la instancia de la camara
         uiManager = FindObjectOfType<UIManager>();  //Obtener la instancia de la interfaz
+        this.moneyController = this.GetComponent<MoneyController>();
 
         this.transform.position = cardManager.getFirstCard().getActiveLocation(); //Posicionar jugador en primera carta
         this.actualCard = cardManager.getFirstCard(); //Establecer variable posicion en primera carta
-        
+        System.Random random = new System.Random(); //TODO Numeros aleatorios
+        int numeroAleatorio = random.Next(0, 6);
+        this.colorPlayer = listaColores[numeroAleatorio];
     }
 
     public void mover(int numMovements) {
-
-        StartCoroutine(iMovimiento(numMovements));
-
-        if (actualCard is PropertyCard)
-            uiManager.activarUICompra((PropertyCard)actualCard);
-        else
-        {
-            if (actualCard.getIsActionOnly()) { actualCard.cardAction(this.gameObject);  }
-                uiManager.activarUIMovimiento(this);
-        }
-        
+        StartCoroutine(iMovimiento(numMovements));        
     }
 
     private IEnumerator iMovimiento(int numMovements) {
         float timeElapsed; //Variable dedicada para Lerp
         Vector3 startPosition; //Posicion desde la posición inicial
         Vector3 targetPosition; // Siguiente carta a la que debe ir
+        if (CustomNumMov > 0) //@TODO Importante cambiar
+            numMovements = CustomNumMov;
 
         while (numMovements != 0) {
             timeElapsed = 0;
@@ -64,7 +61,24 @@ public class PlayerController : MonoBehaviour
             numMovements--; //Restar un movimiento
             actualCard = cardManager.getNextCard(actualCard); //Actualizar la carta en la que está 
         }
+        activarNuevaInterfaz();
     }
+    public Color getColor()
+    {
+        return this.colorPlayer;
+    }
+
+    public void activarNuevaInterfaz()
+    {
+        if (actualCard is PropertyCard)
+            uiManager.activarUICompra((PropertyCard)actualCard);
+        else
+        {
+            if (actualCard.getIsActionOnly()) { actualCard.cardAction(this.gameObject); }
+            uiManager.activarUIMovimiento(this);
+        }
+    }
+
     public int getId() {
         return playerId;
     }
@@ -90,9 +104,33 @@ public class PlayerController : MonoBehaviour
 
     public bool comprarCarta()
     {
-        if (this.getPosicionEnCarta() is PropertyCard)
-            return ((PropertyCard)this.getPosicionEnCarta()).comprar(this);
-        return false;
+        if (this.getPosicionEnCarta() is not PropertyCard
+                || this.moneyController.getMoney() < ((PropertyCard)this.getPosicionEnCarta()).getCardValue()
+                || isCardAlreadyBought((PropertyCard) this.getPosicionEnCarta()))
+            return false;
+        if (!((PropertyCard)this.getPosicionEnCarta()).comprar(this)) 
+            return false; //Can't buy the card
+        PropertyCard card = (PropertyCard) this.getPosicionEnCarta();
+        try
+        {
+            this.listCardBought[card.getTextureName()].Add((PropertyCard)this.getPosicionEnCarta());
+        }
+        catch (KeyNotFoundException)
+        {
+            this.listCardBought.Add(card.getTextureName(), new List<PropertyCard> { (PropertyCard)this.getPosicionEnCarta() });
+        }
+        finally
+        {
+            this.moneyController.removeMoney(card.getCardValue());
+        }
+        return true;
+    }
+
+    private bool isCardAlreadyBought(PropertyCard card)
+    {
+            return card.hasOwner()
+                &&( this.listCardBought[card.getTextureName()].Count > 0
+                || this.listCardBought[card.getTextureName()].Exists(c => c.getId() == card.getId()));
     }
 
     public void pasarASecundario()
@@ -105,4 +143,20 @@ public class PlayerController : MonoBehaviour
         this.actualCard.liberarLugar(this.transform.position);
         this.transform.position = this.actualCard.getActiveLocation();
     }
+
+    public bool hasAllHouses()
+    {
+        bool found = false;
+        foreach (KeyValuePair<string, List<PropertyCard>> entry in listCardBought)
+            if (!found) {
+                found = entry.Value.Count == this.cardManager.getHouseNumber(entry.Key);
+            }
+        return found;
+    }
+
+    public IDictionary<String, List<PropertyCard>> getPropertiesOwned()
+    {
+        return new Dictionary<String, List<PropertyCard>>(this.listCardBought);
+    }
+
 }

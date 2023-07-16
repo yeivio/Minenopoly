@@ -6,7 +6,7 @@ public class MoneyController : MonoBehaviour
 {
     private int playerMoney;
 
-    private int DEFAULT_PLAYER_MONEY = 200;
+    public int DEFAULT_PLAYER_MONEY = 12000;
 
 
 

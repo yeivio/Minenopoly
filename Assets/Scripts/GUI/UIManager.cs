@@ -7,10 +7,15 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] private GameObject InterfazCompra;
     [SerializeField] private GameObject InterfazMovimiento;
+    [SerializeField] private GameObject InterfazCompraCasa;
+    List<GameObject> UIList = new List<GameObject>();
 
     private void Start()
     {
-        
+        UIList.Add(InterfazCompra);
+        UIList.Add(InterfazMovimiento);
+        UIList.Add(InterfazCompraCasa);
+
     }
 
     public void activarUICompra(PropertyCard carta)
@@ -37,4 +42,21 @@ public class UIManager : MonoBehaviour
     {
         this.InterfazMovimiento.GetComponent<MovementInterface>().desactivarUI();
     }
+
+    public void activarUICompraCasa(PlayerController player)
+    {
+        this.InterfazCompraCasa.GetComponent<HouseBuildInterface>().activarUI(player);
+    }
+    public void desactivarUICompraCasa()
+    {
+        this.InterfazCompraCasa.GetComponent<HouseBuildInterface>().desactivarUI();
+    }
+
+    public void desactivarTodaUI()
+    {
+        desactivarUICompra();
+        desactivarUICompraCasa();
+        desactivarUIMovimiento();
+    }
+
 }

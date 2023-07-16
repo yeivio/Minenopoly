@@ -10,18 +10,16 @@ public class BuyInterface : MonoBehaviour
     [SerializeField] private TextMeshProUGUI textoPrecio;
     [SerializeField] private TextMeshProUGUI textoDineroJugador;
 
+    
     public void activarUI(PropertyCard carta)
     {
         string textoCarta;
         if (carta.getOwner() == null)
-        {
             textoCarta = "Nadie";
-        }
         else
-        {
             textoCarta = carta.getOwner().getId().ToString();
-        }
-        textoOwner.text = "Owner: "+textoCarta;
+        
+        this.textoOwner.text = "Owner: "+textoCarta;
         this.gameObject.SetActive(true);
     }
 

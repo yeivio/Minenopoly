@@ -12,7 +12,7 @@ public class CardManager : MonoBehaviour
     private GameObject[] listCard; //lista de todos los objetos cartas que existen
     private const string ROUTE_CSV = @"C:\Users\logan\Desktop\Monopoly\Assets\Resources\tablero.csv"; //Lista del fichero de configuración para las cartas
 
-    public GameObject a;
+    private Dictionary<String, int> cardDictionary = new Dictionary<String, int>();
 
     void Start(){
         listCard = new GameObject[numCartas];
@@ -56,6 +56,8 @@ public class CardManager : MonoBehaviour
             auxcard.setConfigCSV(values[1], values[2],
                 values[3], values[4], values[5], values[6],
                 values[7], values[8], values[9], values[10], values[11]);
+            //TODO Muy poco eficiente guardar todas las texturas, habría que hacer solo si es una propertyCard
+            this.addToCardDictionary(values[1]);
         }
     } 
 
@@ -64,4 +66,19 @@ public class CardManager : MonoBehaviour
         return GET_MAX_PLAYER_POSITIONS;
     }
 
+    public int addToCardDictionary(String textureName)
+    {
+        if (String.IsNullOrEmpty(textureName))
+            return -1;
+        if (cardDictionary.ContainsKey(textureName))
+            cardDictionary[textureName] += 1;
+        else
+            cardDictionary[textureName] = 1;
+        return cardDictionary[textureName];
+    }
+
+    public int getHouseNumber(string key)
+    {
+        return this.cardDictionary[key];
+    }
 }

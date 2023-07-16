@@ -9,9 +9,8 @@ public class CameraManager : MonoBehaviour
     public Vector3 default_position;
 
     void LateUpdate(){
-        if(playerTarget != null){
+        if(playerTarget != null)
             this.gameObject.transform.position = playerTarget.getCameraPlacement();
-        }
     }
 
     public void setDefaultPosition()

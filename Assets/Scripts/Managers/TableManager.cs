@@ -13,13 +13,13 @@ public class TableManager : MonoBehaviour
     private GameObject mainCamera; // Instancia de la cámara actual
     private GameObject jugadorActivo; //Instancia del jugador que le toca jugar
 
+    
+
     public int MAX_JUGADORES;
 
     void Start(){
         load(); //iniciar variables
     }
-
-    //void Update() { Debug.Log(this.playerManager.getTurn()); }
 
     /// <summary>
     /// Función constructor privada para cargar las variables necesarias para la clase
@@ -64,10 +64,11 @@ public class TableManager : MonoBehaviour
     /// <summary>
     /// Función para pasar al siguiente jugador activo.
     /// </summary>
-    public void siguienteTurno(){
+    public GameObject siguienteTurno(){
         jugadorActivo = playerManager.getNextPlayer();
         //jugadorActivo.transform.position = playerManager.getJugadorActivo().getPosicionEnCarta().obtenerLugarLibre();
         mainCamera.gameObject.GetComponent<CameraManager>().setNewActivePlayer(jugadorActivo.GetComponent<PlayerController>());
+        return jugadorActivo;
     }
 
     
@@ -77,6 +78,12 @@ public class TableManager : MonoBehaviour
         UIManager.desactivarUICompra();
         UIManager.activarUIMovimiento(jugadorActivo.GetComponent<PlayerController>());
         mainCamera.gameObject.GetComponent<CameraManager>().setNewActivePlayer(jugadorActivo.GetComponent<PlayerController>());
+    }
+
+    public void construirCasa()
+    {
+        UIManager.desactivarTodaUI();
+        UIManager.activarUICompraCasa(this.jugadorActivo.GetComponent<PlayerController>());
     }
    
 
@@ -92,7 +99,7 @@ public class TableManager : MonoBehaviour
         }
 
         UIManager.desactivarUICompra();
-        UIManager.activarUIMovimiento(null);
+        UIManager.activarUIMovimiento(this.siguienteTurno().GetComponent<PlayerController>());
     }
 
     

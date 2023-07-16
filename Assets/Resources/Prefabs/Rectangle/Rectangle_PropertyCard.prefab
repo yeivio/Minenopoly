@@ -258,11 +258,9 @@ MonoBehaviour:
   posicionEspera2: {fileID: 7847840695550353930}
   posicionEspera3: {fileID: 4092186183448769978}
   cardValue: 
-  cardValueInt: 0
-  houseValue: 0
-  hotelValue: 0
   tmpCardNameText: {fileID: 2979900785786367928}
   tmpValueNameText: {fileID: 2979900785193320929}
+  displayOwner: {fileID: 439355602402351195}
 --- !u!65 &3761573928959073389
 BoxCollider:
   m_ObjectHideFlags: 0

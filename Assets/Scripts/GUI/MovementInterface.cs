@@ -7,15 +7,24 @@ public class MovementInterface : MonoBehaviour
 {
 
     [SerializeField] private TextMeshProUGUI textoDinero;
+    [SerializeField] private GameObject botonComprarCasa;
+    private MoneyController activePlayer;
 
-    private void Start()
+    private void Update()
     {
-
+        if(activePlayer != null)
+            textoDinero.SetText("Dinero:" + activePlayer.getMoney());
     }
-
     public void activarUI(GameObject player)
     {
-        textoDinero.SetText("Dinero:" + player.GetComponent<MoneyController>().getMoney());
+        if (player.GetComponent<PlayerController>().hasAllHouses())
+            this.botonComprarCasa.SetActive(true);
+        
+        else
+            this.botonComprarCasa.SetActive(false);
+
+        //textoDinero.SetText("Dinero:" + player.GetComponent<MoneyController>().getMoney());
+        this.activePlayer = player.GetComponent<MoneyController>();
         this.gameObject.SetActive(true);
     }
 
