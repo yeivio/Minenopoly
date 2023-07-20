@@ -7,12 +7,18 @@ using TMPro;
 public class PropertyCard : GenericCard
 {
     protected PlayerController owner; //Jugador Propietario de la carta
-    [SerializeField] protected string cardValue; 
-
+    [SerializeField] protected string cardValue; //Valor de la carta
+    [SerializeField] protected int hotelValue; // Valor de comprar un Hotel
+    [SerializeField] protected int houseValue; // Valor de comprar una casa
     [SerializeField] protected GameObject tmpCardNameText; // Texto Nombre de la carta
     [SerializeField] protected GameObject tmpValueNameText; // Texto valor de la carta
     [SerializeField] protected GameObject displayOwner; // Indicador del owner
+    [SerializeField] protected GameObject displayHouses; // Indicador del numero de casas
+    [SerializeField] protected GameObject displayHotels; // Indicador del numero de hoteles
 
+
+    private int houseNumber;
+    private int hotelNumber;
     private String textureName;
     public override void setConfigCSV(string texture, string nombreCalle, string precioCompra,
         string precioDeCasa, string precioDeHotel, string alquiler_0, string alquiler_1, string alquiler_2,
@@ -21,6 +27,13 @@ public class PropertyCard : GenericCard
         this.textureName = texture;
         this.cardName = nombreCalle;
         this.cardValue = precioCompra;
+
+        if (!String.IsNullOrEmpty(precioDeHotel) && !String.IsNullOrEmpty(precioDeHotel))
+        {
+            //@TODO Esto debería estar en dos clases, una para las cartas train y otra para las property normales
+            this.hotelValue = Int32.Parse(precioDeHotel);
+            this.houseValue = Int32.Parse(precioDeCasa);
+        }
         var aux = Resources.Load<Texture>("Card/" + texture);
         //Texto visual
         this.tmpCardNameText.GetComponent<TextMeshProUGUI>().SetText(cardName);
@@ -77,5 +90,25 @@ public class PropertyCard : GenericCard
     {
         return this.owner != null;
     }
-    
+
+    public int getHotelPrice()
+    {
+        return this.hotelValue;
+    }
+    public int getHousePrice()
+    {
+        return this.houseValue;
+    }
+
+    public void setHotelNumber(int number)
+    {
+        this.hotelNumber = number;
+        this.displayHotels.GetComponent<TextMeshProUGUI>().SetText(this.hotelNumber.ToString());
+    }
+    public void setHouseNumber(int number)
+    {
+        this.houseNumber = number;
+        this.displayHouses.GetComponent<TextMeshProUGUI>().SetText(this.houseNumber.ToString());
+    }
 }
+

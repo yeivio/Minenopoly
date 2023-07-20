@@ -64,14 +64,13 @@ public class TableManager : MonoBehaviour
     /// <summary>
     /// Función para pasar al siguiente jugador activo.
     /// </summary>
-    public GameObject siguienteTurno(){
+    public void siguienteTurno(){
         jugadorActivo = playerManager.getNextPlayer();
         //jugadorActivo.transform.position = playerManager.getJugadorActivo().getPosicionEnCarta().obtenerLugarLibre();
         mainCamera.gameObject.GetComponent<CameraManager>().setNewActivePlayer(jugadorActivo.GetComponent<PlayerController>());
-        return jugadorActivo;
     }
 
-    
+
     public void skipCompra()
     {
         jugadorActivo = playerManager.getNextPlayer();
@@ -99,7 +98,8 @@ public class TableManager : MonoBehaviour
         }
 
         UIManager.desactivarUICompra();
-        UIManager.activarUIMovimiento(this.siguienteTurno().GetComponent<PlayerController>());
+        this.siguienteTurno();
+        UIManager.activarUIMovimiento(this.jugadorActivo.GetComponent<PlayerController>());
     }
 
     
