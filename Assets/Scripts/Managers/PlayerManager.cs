@@ -27,6 +27,7 @@ public class PlayerManager
     /// <returns>El Objecto Jugador creado</returns>
     public GameObject registrarJugador(){
         GameObject aux = MonoBehaviour.Instantiate(playerClass, new Vector3(0,0,0), new Quaternion(0,180,0,0));
+        aux.GetComponent<PlayerController>().setId(listPlayers.Count);
         listPlayers.Add(aux);
         turn++;
         return aux;

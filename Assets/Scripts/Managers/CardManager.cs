@@ -9,15 +9,15 @@ public class CardManager : MonoBehaviour
 {
     private const int GET_MAX_PLAYER_POSITIONS= 4; //Máximo de casillas en cada carta
     [SerializeField] private int numCartas; // Numero de cartas máximas en el tablero
-    private GameObject[] listCard; //lista de todos los objetos cartas que existen
+    private GenericCard[] listCard; //lista de todos los objetos cartas que existen
     private const string ROUTE_CSV = @"C:\Users\logan\Desktop\Monopoly\Assets\Resources\tablero.csv"; //Lista del fichero de configuración para las cartas
 
     private Dictionary<String, int> cardDictionary = new Dictionary<String, int>();
 
     void Start(){
-        listCard = new GameObject[numCartas];
+        listCard = new GenericCard[numCartas];
         foreach (var p in GameObject.FindGameObjectsWithTag("Card")) { 
-            listCard[p.GetComponent<GenericCard>().getId()] = p;
+            listCard[p.GetComponent<GenericCard>().getId()] = p.GetComponent<GenericCard>();
         }
         loadCSV();
     }
@@ -80,5 +80,11 @@ public class CardManager : MonoBehaviour
     public int getHouseNumber(string key)
     {
         return this.cardDictionary[key];
+    }
+
+    public void buildStructures(PropertyCard propertyCard, int numHouses, int numHotels)
+    {
+        ((PropertyCard)this.listCard[propertyCard.getId()]).setHouseNumber(numHouses);
+        ((PropertyCard)this.listCard[propertyCard.getId()]).setHotelNumber(numHotels);
     }
 }

@@ -9,7 +9,6 @@ public class PlayerController : MonoBehaviour
     public CardManager cardManager; //CardManager
     private GenericCard actualCard; //Carta posición actual
     private MoneyController moneyController; //Controlador del dinero del jugador
-    private UIManager uiManager;
     private int playerId; //id del jugador
     private static int duration = 1; //Velocidad de movimiento
     public GameObject cameraLocation;
@@ -21,16 +20,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Color colorPlayer;
     Color[] listaColores = { Color.red, Color.black , Color.blue, Color.green, Color.grey, Color.magenta };
 
-
+    public static event Action<PlayerController> onFinishedMovement; //Evento para cuando acabe los movimientos
     void Awake()
     {
         cardManager = FindObjectOfType<CardManager>(); //Obtener la instancia del CardManager
-        uiManager = FindObjectOfType<UIManager>();  //Obtener la instancia de la interfaz
         this.moneyController = this.GetComponent<MoneyController>();
 
         this.transform.position = cardManager.getFirstCard().getActiveLocation(); //Posicionar jugador en primera carta
         this.actualCard = cardManager.getFirstCard(); //Establecer variable posicion en primera carta
-        System.Random random = new System.Random(); //TODO Numeros aleatorios
+
+
+        System.Random random = new System.Random(); //@TODO Numeros aleatorios
         int numeroAleatorio = random.Next(0, 6);
         this.colorPlayer = listaColores[numeroAleatorio];
     }
@@ -43,8 +43,13 @@ public class PlayerController : MonoBehaviour
         float timeElapsed; //Variable dedicada para Lerp
         Vector3 startPosition; //Posicion desde la posición inicial
         Vector3 targetPosition; // Siguiente carta a la que debe ir
+        int startNumber = actualCard.getId();
+
         if (CustomNumMov > 0) //@TODO Importante cambiar
             numMovements = CustomNumMov;
+
+        if (actualCard.getId() == 0)
+            actualCard.cardAction(this.gameObject);
 
         while (numMovements != 0) {
             timeElapsed = 0;
@@ -60,25 +65,18 @@ public class PlayerController : MonoBehaviour
             }
             numMovements--; //Restar un movimiento
             actualCard = cardManager.getNextCard(actualCard); //Actualizar la carta en la que está 
-        }
-        activarNuevaInterfaz();
+        }          
+        actualCard.cardAction(this.gameObject);
+        onFinishedMovement?.Invoke(this);
     }
     public Color getColor()
     {
         return this.colorPlayer;
     }
-
-    public void activarNuevaInterfaz()
+    public void setId(int id)
     {
-        if (actualCard is PropertyCard)
-            uiManager.activarUICompra((PropertyCard)actualCard);
-        else
-        {
-            if (actualCard.getIsActionOnly()) { actualCard.cardAction(this.gameObject); }
-            uiManager.activarUIMovimiento(this);
-        }
+        this.playerId = id;
     }
-
     public int getId() {
         return playerId;
     }

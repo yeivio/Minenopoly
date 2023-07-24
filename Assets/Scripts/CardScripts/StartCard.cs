@@ -7,10 +7,6 @@ public class StartCard : GenericCard
 {
 
     private int ROUND_MONEY = 200;
-    public int getRoundMoney()
-    {
-        return this.ROUND_MONEY;
-    }
 
     public override void setConfigCSV(string texture, string nombreCalle, string precioCompra,
         string precioDeCasa, string precioDeHotel, string alquiler_0, string alquiler_1, string alquiler_2,

@@ -6,7 +6,7 @@ public class MoneyController : MonoBehaviour
 {
     private int playerMoney;
 
-    public int DEFAULT_PLAYER_MONEY = 12000;
+    public int DEFAULT_PLAYER_MONEY;
 
 
 
@@ -16,11 +16,11 @@ public class MoneyController : MonoBehaviour
     }
 
     public void addMoney(int value){
-        playerMoney += value;
+        this.playerMoney += value;
     }
 
     public void removeMoney(int value){
-        playerMoney -= value;
+        this.playerMoney -= value;
     }
 
     public int getMoney()

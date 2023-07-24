@@ -1,8 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using UnityEngine.UI;
 using TMPro;
 public class PropertyCard : GenericCard
 {
@@ -13,13 +11,17 @@ public class PropertyCard : GenericCard
     [SerializeField] protected GameObject tmpCardNameText; // Texto Nombre de la carta
     [SerializeField] protected GameObject tmpValueNameText; // Texto valor de la carta
     [SerializeField] protected GameObject displayOwner; // Indicador del owner
-    [SerializeField] protected GameObject displayHouses; // Indicador del numero de casas
-    [SerializeField] protected GameObject displayHotels; // Indicador del numero de hoteles
+    [SerializeField] private GameObject displayHouses; // Indicador del numero de casas
+    [SerializeField] private GameObject displayHotels; // Indicador del numero de hoteles
 
+    protected List<int> listAlquileres;
 
     private int houseNumber;
     private int hotelNumber;
-    private String textureName;
+
+    private int alquiler_hotel;
+    protected String textureName;
+
     public override void setConfigCSV(string texture, string nombreCalle, string precioCompra,
         string precioDeCasa, string precioDeHotel, string alquiler_0, string alquiler_1, string alquiler_2,
         string alquiler_3, string alquiler_4, string alquiler_Hotel)
@@ -27,13 +29,19 @@ public class PropertyCard : GenericCard
         this.textureName = texture;
         this.cardName = nombreCalle;
         this.cardValue = precioCompra;
+        listAlquileres = new List<int>();
+        listAlquileres.Add(Int32.Parse(alquiler_0));
+        listAlquileres.Add(Int32.Parse(alquiler_1));
+        listAlquileres.Add(Int32.Parse(alquiler_2));
+        listAlquileres.Add(Int32.Parse(alquiler_3));
+        listAlquileres.Add(Int32.Parse(alquiler_4));
+        this.alquiler_hotel = Int32.Parse(alquiler_Hotel);
+        this.hotelValue = Int32.Parse(precioDeHotel);
+        this.houseValue = Int32.Parse(precioDeCasa);
 
-        if (!String.IsNullOrEmpty(precioDeHotel) && !String.IsNullOrEmpty(precioDeHotel))
-        {
-            //@TODO Esto debería estar en dos clases, una para las cartas train y otra para las property normales
-            this.hotelValue = Int32.Parse(precioDeHotel);
-            this.houseValue = Int32.Parse(precioDeCasa);
-        }
+        this.houseNumber = 0;
+        this.hotelNumber = 0;
+
         var aux = Resources.Load<Texture>("Card/" + texture);
         //Texto visual
         this.tmpCardNameText.GetComponent<TextMeshProUGUI>().SetText(cardName);
@@ -78,7 +86,12 @@ public class PropertyCard : GenericCard
 
     public override void cardAction(GameObject jugador)
     {
-        throw new NotImplementedException();
+        PlayerController player = jugador.GetComponent<PlayerController>();
+
+
+        if (!this.hasOwner() || this.owner.getId() == player.getId())
+            return;
+        player.GetComponent<MoneyController>().removeMoney(this.getAlquiler());
     }
 
     public String getTextureName()
@@ -109,6 +122,15 @@ public class PropertyCard : GenericCard
     {
         this.houseNumber = number;
         this.displayHouses.GetComponent<TextMeshProUGUI>().SetText(this.houseNumber.ToString());
+    }
+
+    public virtual int getAlquiler()
+    {
+        int totalCasa = 0;
+        int totalHotel = 0;
+        totalCasa = listAlquileres[this.houseNumber];
+        totalHotel = alquiler_hotel * this.hotelNumber;
+        return totalCasa + totalHotel;
     }
 }
 

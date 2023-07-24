@@ -5,36 +5,45 @@ using UnityEngine;
 
 public class MovementInterface : MonoBehaviour
 {
-
-    [SerializeField] private TextMeshProUGUI textoDinero;
-    [SerializeField] private GameObject botonComprarCasa;
+    private TableManager tableManager;
     private MoneyController activePlayer;
+    [SerializeField] private GameObject botonComprarCasa;
+    [SerializeField] private TextMeshProUGUI textoDinero;
+
+    private void Awake()
+    {
+        
+        tableManager = FindObjectOfType<TableManager>();
+        if (tableManager.getActivePlayer().GetComponent<PlayerController>().hasAllHouses())
+            this.botonComprarCasa.SetActive(true);
+        else
+            this.botonComprarCasa.SetActive(false);
+
+        this.activePlayer = tableManager.getActivePlayer().GetComponent<MoneyController>();
+    }
+
+    public void OnStartMovementButton()
+    {
+        tableManager.empezarTurno();
+        Destroy(this.gameObject);
+    }
+
+    public void OnNextPlayerButton()
+    {
+
+        tableManager.siguienteTurno();
+        Destroy(this.gameObject);
+    }
+
+    public void OnBuyHouseButton()
+    {
+        tableManager.construirCasa();
+        Destroy(this.gameObject);
+    }
 
     private void Update()
     {
         if(activePlayer != null)
             textoDinero.SetText("Dinero:" + activePlayer.getMoney());
-    }
-    public void activarUI(GameObject player)
-    {
-        if (player.GetComponent<PlayerController>().hasAllHouses())
-            this.botonComprarCasa.SetActive(true);
-        
-        else
-            this.botonComprarCasa.SetActive(false);
-
-        //textoDinero.SetText("Dinero:" + player.GetComponent<MoneyController>().getMoney());
-        this.activePlayer = player.GetComponent<MoneyController>();
-        this.gameObject.SetActive(true);
-    }
-
-    public void activarUI()
-    {
-        this.gameObject.SetActive(true);
-    }
-
-    public void desactivarUI()
-    {
-        this.gameObject.SetActive(false);
     }
 }

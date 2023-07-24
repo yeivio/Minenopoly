@@ -10,6 +10,7 @@ public class TaxesCard : GenericCard
     public override void cardAction(GameObject jugador)
     {
         jugador.GetComponent<MoneyController>().removeMoney(value);
+
     }
 
     public override void setConfigCSV(string texture, string nombreCalle, string precioCompra, 

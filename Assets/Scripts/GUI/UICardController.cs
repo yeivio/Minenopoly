@@ -27,6 +27,10 @@ public class UICardController : MonoBehaviour
 
     }
 
+    public PropertyCard getCard(){  return this.card;   }
+    public int getNumHouses(){ return this.numHouse;   }
+    public int getNumHotel(){  return this.numHotel;   }
+
     public void increaseNumberHouse()
     {
         this.numHouse++;
@@ -57,12 +61,5 @@ public class UICardController : MonoBehaviour
     {
         return this.card.getHousePrice() * this.numHotel + 
             this.card.getHousePrice() * this.numHouse;
-    }
-
-    public void finishBuild()
-    {
-        this.card.setHotelNumber(this.numHotel);
-        this.card.setHouseNumber(this.numHouse);
-
     }
 }

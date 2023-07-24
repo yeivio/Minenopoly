@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -5,58 +6,53 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] private GameObject InterfazCompra;
-    [SerializeField] private GameObject InterfazMovimiento;
-    [SerializeField] private GameObject InterfazCompraCasa;
+    
+    [SerializeField] private GameObject buyUI;
+    [SerializeField] private GameObject movementUI;
+    [SerializeField] private GameObject houseBuildUI;
     List<GameObject> UIList = new List<GameObject>();
 
-    private void Start()
+    private void Awake()
     {
-        UIList.Add(InterfazCompra);
-        UIList.Add(InterfazMovimiento);
-        UIList.Add(InterfazCompraCasa);
-
+        PlayerController.onFinishedMovement += onPlayerEndMovement;
     }
 
     public void activarUICompra(PropertyCard carta)
     {
-        this.InterfazCompra.GetComponent<BuyInterface>().activarUI(carta);
+        UIList.Add(Instantiate(buyUI, new Vector2(), Quaternion.identity, transform)); // Instanciar objeto carta
     }
-
-
-    public void desactivarUICompra()
-    {
-        this.InterfazCompra.GetComponent<BuyInterface>().desactivarUI();
-    }
-
 
     public void activarUIMovimiento(PlayerController player) 
     {
-        if (player == null)
-            this.InterfazMovimiento.GetComponent<MovementInterface>().activarUI();
-        else
-            this.InterfazMovimiento.GetComponent<MovementInterface>().activarUI(player.gameObject);
-    }
-
-    public void desactivarUIMovimiento()
-    {
-        this.InterfazMovimiento.GetComponent<MovementInterface>().desactivarUI();
+        UIList.Add(Instantiate(movementUI, new Vector2(), Quaternion.identity, transform)); 
     }
 
     public void activarUICompraCasa(PlayerController player)
     {
-        this.InterfazCompraCasa.GetComponent<HouseBuildInterface>().activarUI(player);
-    }
-    public void desactivarUICompraCasa()
-    {
-        this.InterfazCompraCasa.GetComponent<HouseBuildInterface>().desactivarUI();
+        UIList.Add(Instantiate(houseBuildUI, new Vector2(), Quaternion.identity, transform)); 
     }
 
     public void desactivarTodaUI()
     {
-        desactivarUICompra();
-        desactivarUICompraCasa();
-        desactivarUIMovimiento();
+        foreach (GameObject obj in UIList)
+            Destroy(obj);
     }
 
+
+    public void onPlayerEndMovement(PlayerController player)
+    {
+        GenericCard card = player.getPosicionEnCarta();
+
+
+        if (card is PropertyCard && !(card as PropertyCard).hasOwner())
+        {
+            this.activarUICompra((PropertyCard)card);
+        }
+        else
+        {
+            this.activarUIMovimiento(player);
+        }
+
+
+    }
 }

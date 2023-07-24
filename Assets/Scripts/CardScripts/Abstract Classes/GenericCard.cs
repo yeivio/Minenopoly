@@ -10,7 +10,6 @@ public abstract class GenericCard : MonoBehaviour
 
     [SerializeField] protected int cardID;
     [SerializeField] protected string cardName;
-    [SerializeField] private bool isActionOnly;
 
     public static float OFFSET = 0.1f; //Pequeño offset para que no atraviese el pj la pieza
 
@@ -74,14 +73,5 @@ public abstract class GenericCard : MonoBehaviour
         foreach(var(key,value) in new Dictionary<Vector3, Boolean>(posicionesEspera))
             if(key == pos)
                 posicionesEspera[key] = true;
-    }
-
-    /// <summary>
-    /// Comprobar si una carta es de solo acción. Esto es que no se necesita intervención del jugador para nada
-    /// </summary>
-    /// <returns>True si es una carta de solo acción, false para lo contrario</returns>
-    public bool getIsActionOnly()
-    {
-        return this.isActionOnly;
     }
 }

@@ -7,7 +7,7 @@ public class JailCard : GenericCard
 {
     [SerializeField] IDictionary<GameObject,int> jail;
     [SerializeField] private bool isGoToJail = false;
-    [SerializeField] private GenericCard jailCard; //Objeto Jail
+    [SerializeField] private GenericCard jailCard; // Carta Carcel
     private const int TURNOS = 3; //Num turnos que el jugador no puede jugar
 
 
@@ -17,7 +17,7 @@ public class JailCard : GenericCard
     }
     public void addPlayerJail(GameObject player){
         if(!this.jail.ContainsKey(player)){
-            this.jail.Add(player,3);
+            this.jail.Add(player, TURNOS);
         }
     }
 

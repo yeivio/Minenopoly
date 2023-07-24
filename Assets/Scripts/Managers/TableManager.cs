@@ -1,32 +1,21 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System;
-using System.Linq;
-using Unity.VisualScripting;
 
 public class TableManager : MonoBehaviour
 {
     public CardManager cardManager; //Manejador de las cartas del tablero
     private PlayerManager playerManager; //Manejador de todos los objetos Jugador
-    public UIManager UIManager;
-
+    private UIManager uiManager;
     private GameObject mainCamera; // Instancia de la cámara actual
     private GameObject jugadorActivo; //Instancia del jugador que le toca jugar
-
-    
-
-    public int MAX_JUGADORES;
-
-    void Start(){
-        load(); //iniciar variables
-    }
+    [SerializeField] private int NUM_PLAYERS = 2;
 
     /// <summary>
     /// Función constructor privada para cargar las variables necesarias para la clase
     /// </summary>
-    private void load(){
+    private void Start(){
         playerManager = new PlayerManager(); //Inicializar el player manager
-
+        uiManager = this.GetComponent<UIManager>();
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera"); //Obtener la camara principal
         try
         {
@@ -37,16 +26,16 @@ public class TableManager : MonoBehaviour
         {
             mainCamera.gameObject.GetComponent<CameraManager>().setDefaultPosition();
         }
-
-        this.UIManager.activarUIMovimiento(null);
+        spawnearJugador(NUM_PLAYERS);
+        uiManager.activarUIMovimiento(this.jugadorActivo.GetComponent<PlayerController>());
     }
 
-    public void spawnearJugador()
+    public void spawnearJugador(int players)
     {
-        if (playerManager.getPlayers().Count != MAX_JUGADORES) //Se puede generar otro jugador
+        for(int i = 0; i<players; i++)
             jugadorActivo = playerManager.registrarJugador();
         mainCamera.gameObject.GetComponent<CameraManager>().setNewActivePlayer(jugadorActivo.GetComponent<PlayerController>());
-        this.UIManager.activarUIMovimiento(jugadorActivo.GetComponent<PlayerController>());
+        
     }
 
     /// <summary>
@@ -55,7 +44,6 @@ public class TableManager : MonoBehaviour
     /// </summary>
     public void empezarTurno()
     {
-        this.UIManager.desactivarUIMovimiento();
         jugadorActivo.GetComponent<PlayerController>().mover(lanzarDados()); // Mover el jugador un número aleatorio de posiciones
         mainCamera.gameObject.GetComponent<CameraManager>().setNewActivePlayer(jugadorActivo.GetComponent<PlayerController>());
     }
@@ -68,41 +56,40 @@ public class TableManager : MonoBehaviour
         jugadorActivo = playerManager.getNextPlayer();
         //jugadorActivo.transform.position = playerManager.getJugadorActivo().getPosicionEnCarta().obtenerLugarLibre();
         mainCamera.gameObject.GetComponent<CameraManager>().setNewActivePlayer(jugadorActivo.GetComponent<PlayerController>());
+        uiManager.activarUIMovimiento(jugadorActivo.GetComponent<PlayerController>());
+        
     }
 
 
     public void skipCompra()
     {
         jugadorActivo = playerManager.getNextPlayer();
-        UIManager.desactivarUICompra();
-        UIManager.activarUIMovimiento(jugadorActivo.GetComponent<PlayerController>());
         mainCamera.gameObject.GetComponent<CameraManager>().setNewActivePlayer(jugadorActivo.GetComponent<PlayerController>());
+        uiManager.activarUIMovimiento(jugadorActivo.GetComponent<PlayerController>());
     }
 
     public void construirCasa()
     {
-        UIManager.desactivarTodaUI();
-        UIManager.activarUICompraCasa(this.jugadorActivo.GetComponent<PlayerController>());
+        //@TODO
     }
    
 
     public void comprarCarta()
     {
-        if (jugadorActivo.GetComponent<PlayerController>().comprarCarta())// Comprar carta
-        { 
-            UIManager.activarUICompra((PropertyCard)jugadorActivo.GetComponent<PlayerController>().getPosicionEnCarta()); // Actualizar UI
-        }
-        else
+        if (!jugadorActivo.GetComponent<PlayerController>().comprarCarta())
         {
-            Debug.LogWarning("No se ha podido ejecutar la compra");
+            Debug.Log("No se ha podido comprar la carta");
         }
-
-        UIManager.desactivarUICompra();
         this.siguienteTurno();
-        UIManager.activarUIMovimiento(this.jugadorActivo.GetComponent<PlayerController>());
     }
 
-    
+    public void buildStructures(List<UICardController> listObjects)
+    {
+        foreach (UICardController obj in listObjects)
+        {
+            cardManager.buildStructures(obj.getCard(),obj.getNumHouses(), obj.getNumHotel());
+        }
+    }
 
 
     /// <summary>
@@ -112,5 +99,10 @@ public class TableManager : MonoBehaviour
     public int lanzarDados(){
         System.Random rnd = new System.Random();
         return rnd.Next(1,6) + rnd.Next(1,6);
+    }
+
+    public PlayerController getActivePlayer()
+    {
+        return this.jugadorActivo.GetComponent<PlayerController>();
     }
 }

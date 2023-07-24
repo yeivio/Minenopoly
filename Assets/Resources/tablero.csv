@@ -24,7 +24,7 @@
 23,Red_Card,Calle maria de molina,220,150,150,18,90,250,700,875,1050
 24,Red_Card,calle cea bermudez,240,150,150,20,100,300,750,925,1100
 25,Train_Card,estacion del mediodia,200,,,,25,50,100,200,
-26,Yellow_Card,Avenida de los reyes catolicos,260,150,150,22,110,,330,800,975
+26,Yellow_Card,Avenida de los reyes catolicos,260,150,150,22,110,330,800,975,1150
 27,Yellow_Card,calle bailen,260,150,150,22,110,330,800,975,1150
 28,Taxes_Card,,200,,,,,,,,
 29,Yellow_Card,plaza españa,280,150,150,24,120,360,850,1025,1200

@@ -5,26 +5,25 @@ using UnityEngine;
 
 public class BuyInterface : MonoBehaviour
 {
+    private TableManager tableManager;
 
-    [SerializeField] private TextMeshProUGUI textoOwner;
-    [SerializeField] private TextMeshProUGUI textoPrecio;
-    [SerializeField] private TextMeshProUGUI textoDineroJugador;
-
-    
-    public void activarUI(PropertyCard carta)
+    private void Awake()
     {
-        string textoCarta;
-        if (carta.getOwner() == null)
-            textoCarta = "Nadie";
-        else
-            textoCarta = carta.getOwner().getId().ToString();
+        tableManager = FindObjectOfType<TableManager>();
+    }
+
+    public void onBuyButton()
+    {
         
-        this.textoOwner.text = "Owner: "+textoCarta;
-        this.gameObject.SetActive(true);
+        tableManager.comprarCarta();
+        Destroy(this.gameObject);
     }
 
-    public void desactivarUI()
+    public void OnSkipButton()
     {
-        this.gameObject.SetActive(false);
+        
+        tableManager.skipCompra();
+        Destroy(this.gameObject);
     }
+
 }

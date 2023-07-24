@@ -454,6 +454,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardManager: {fileID: 0}
   cameraLocation: {fileID: 5714151078448548562}
+  CustomNumMov: 0
   colorPlayer: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &5289825477894053134
 MonoBehaviour:
@@ -467,6 +468,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dbfff2b426fa2d43b51e79f5ae7d30a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DEFAULT_PLAYER_MONEY: 12000
 --- !u!1 &6681993198448823955
 GameObject:
   m_ObjectHideFlags: 0

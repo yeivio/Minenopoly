@@ -12,6 +12,20 @@ public class HouseBuildInterface : MonoBehaviour
 
     private static string DEFAULT_TEXT = "Precio Total:";
     private int total_price;
+
+
+    private TableManager tableManager;
+
+    private void Awake()
+    {
+        tableManager = FindObjectOfType<TableManager>();
+        activePlayer = tableManager.getActivePlayer();
+        loadUI(activePlayer);
+
+        Debug.Log("Se crea interfaz construir casas para:" + tableManager.getActivePlayer().getId());
+    }
+
+
     private void LateUpdate()
     {
         total_price = 0;
@@ -21,7 +35,7 @@ public class HouseBuildInterface : MonoBehaviour
         this.totalPriceText.GetComponent<TextMeshProUGUI>().SetText(DEFAULT_TEXT + total_price);
     }
 
-    public void activarUI(PlayerController player)
+    private void loadUI(PlayerController player)
     {
         this.gameObject.SetActive(true);
 
@@ -57,20 +71,8 @@ public class HouseBuildInterface : MonoBehaviour
             Debug.LogError("Demasiado caro");
             return;
         }
-        foreach(UICardController obj in listObjects)
-        {
-            obj.finishBuild();
-        }
-        this.desactivarUI();
-        FindObjectOfType<UIManager>().activarUIMovimiento(activePlayer);
+        
+        tableManager.buildStructures(listObjects);
+        Destroy(this);
     }
-
-    public void desactivarUI()
-    {
-        this.total_price = 0;
-        foreach (UICardController obj in listObjects)
-            Destroy(obj.gameObject);
-        this.gameObject.SetActive(false);
-    }
-
 }
