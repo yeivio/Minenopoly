@@ -1,13 +1,10 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System;
-using System.Linq;
 
 public class CardManager : MonoBehaviour
 {
-    private const int GET_MAX_PLAYER_POSITIONS= 4; //Máximo de casillas en cada carta
     [SerializeField] private int numCartas; // Numero de cartas máximas en el tablero
     private GenericCard[] listCard; //lista de todos los objetos cartas que existen
     private const string ROUTE_CSV = @"C:\Users\logan\Desktop\Monopoly\Assets\Resources\tablero.csv"; //Lista del fichero de configuración para las cartas
@@ -61,11 +58,6 @@ public class CardManager : MonoBehaviour
         }
     } 
 
-    public int getMaxPlayerPosition()
-    {
-        return GET_MAX_PLAYER_POSITIONS;
-    }
-
     public int addToCardDictionary(String textureName)
     {
         if (String.IsNullOrEmpty(textureName))
@@ -87,4 +79,13 @@ public class CardManager : MonoBehaviour
         ((PropertyCard)this.listCard[propertyCard.getId()]).setHouseNumber(numHouses);
         ((PropertyCard)this.listCard[propertyCard.getId()]).setHotelNumber(numHotels);
     }
+    
+    public JailCard getJailCard()
+    {
+        foreach (JailCard card in FindObjectsOfType<JailCard>())
+            if (card.isGoToJailCard())
+                return card;
+        return null;
+    }
+    
 }

@@ -124,6 +124,16 @@ public class PropertyCard : GenericCard
         this.displayHouses.GetComponent<TextMeshProUGUI>().SetText(this.houseNumber.ToString());
     }
 
+    public int getHouseNumber()
+    {
+        return houseNumber;
+    }
+
+    public int getHotelNumber()
+    {
+        return hotelNumber;
+    }
+
     public virtual int getAlquiler()
     {
         int totalCasa = 0;

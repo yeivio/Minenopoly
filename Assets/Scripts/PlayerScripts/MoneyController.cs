@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class MoneyController : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class MoneyController : MonoBehaviour
 
     public int DEFAULT_PLAYER_MONEY;
 
-
+    public static event Action<PlayerController> onBankrupt;
 
     void Awake()
     {
@@ -21,6 +22,8 @@ public class MoneyController : MonoBehaviour
 
     public void removeMoney(int value){
         this.playerMoney -= value;
+        if (playerMoney < 0)
+            onBankrupt?.Invoke(this.gameObject.GetComponent<PlayerController>());
     }
 
     public int getMoney()

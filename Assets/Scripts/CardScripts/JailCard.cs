@@ -12,29 +12,42 @@ public class JailCard : GenericCard
 
 
     void Start(){
+        posicionesEspera = new Dictionary<Vector3, Boolean>(){{posicionEspera1.transform.position,true},
+                                                            {posicionEspera2.transform.position,true},
+                                                            {posicionEspera3.transform.position,true}};
         jail = new Dictionary<GameObject,int>();
-
+        TableManager.onRoundFinished += updateJail; //Evento finaliza movimientos
     }
+    
     public void addPlayerJail(GameObject player){
-        if(!this.jail.ContainsKey(player)){
+        if (!this.jail.ContainsKey(player)){
             this.jail.Add(player, TURNOS);
+            player.GetComponent<PlayerController>().setJailed(true);
         }
     }
 
-    public void removePlayerJail(GameObject player){
+    private void removePlayerJail(GameObject player){
         if(this.jail.ContainsKey(player)){
             this.jail.Remove(player);
+            player.GetComponent<PlayerController>().setJailed(false);
         }
         
     }   
 
-    public void updateJail(){
-        foreach(var o in this.jail){
+    private void updateJail(){
+        foreach (var o in new Dictionary<GameObject, int>(this.jail))
+        {
             jail[o.Key]--;
+
             if(o.Value == 0){
                 removePlayerJail(o.Key);
             }
         }
+    }
+
+    public bool onJail(GameObject player)
+    {
+        return jail.Keys.Contains(player);
     }
 
     public override void setConfigCSV(string texture, string nombreCalle, string precioCompra,
@@ -56,13 +69,18 @@ public class JailCard : GenericCard
 
     public override void cardAction(GameObject jugador)
     {
-        if (isGoToJail)
+        if (this.isGoToJail)
         {
             this.addPlayerJail(jugador);
-            jugador.transform.position = this.jailCard.obtenerLugarLibre();
+            
             jugador.GetComponent<PlayerController>().setPosicionActual(this.jailCard);
-
+            jugador.transform.position = this.jailCard.obtenerLugarLibre();
         }
 
+    }
+
+    public bool isGoToJailCard()
+    {
+        return this.isGoToJail;
     }
 }

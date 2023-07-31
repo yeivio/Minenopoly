@@ -13,10 +13,10 @@ public abstract class GenericCard : MonoBehaviour
 
     public static float OFFSET = 0.1f; //Pequeño offset para que no atraviese el pj la pieza
 
-    private Dictionary<Vector3,Boolean> posicionesEspera; //Diccionario que relaciona el estado de las posiciones de espera en las cartas
+    protected Dictionary<Vector3,Boolean> posicionesEspera; //Diccionario que relaciona el estado de las posiciones de espera en las cartas
 
-    [SerializeField] GameObject posicionActiva;
-    [SerializeField] GameObject posicionEspera1,posicionEspera2,posicionEspera3;
+    [SerializeField] protected GameObject posicionActiva;
+    [SerializeField] protected GameObject posicionEspera1,posicionEspera2,posicionEspera3;
 
     public abstract void setConfigCSV(String texture, String nombreCalle, String precioCompra,
         String precioDeCasa, String precioDeHotel, String alquiler_0, String alquiler_1,

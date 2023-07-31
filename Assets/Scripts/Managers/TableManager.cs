@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class TableManager : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class TableManager : MonoBehaviour
     private GameObject jugadorActivo; //Instancia del jugador que le toca jugar
     [SerializeField] private int NUM_PLAYERS = 2;
 
+    public static event Action onRoundFinished;
+
     /// <summary>
     /// Función constructor privada para cargar las variables necesarias para la clase
     /// </summary>
@@ -17,17 +20,14 @@ public class TableManager : MonoBehaviour
         playerManager = new PlayerManager(); //Inicializar el player manager
         uiManager = this.GetComponent<UIManager>();
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera"); //Obtener la camara principal
-        try
-        {
-            mainCamera.gameObject.GetComponent<CameraManager>()
-                .setNewActivePlayer(jugadorActivo.GetComponent<PlayerController>()); //Establecer la posición de la camra en el primer jugador
-        }
-        catch
-        {
-            mainCamera.gameObject.GetComponent<CameraManager>().setDefaultPosition();
-        }
+
         spawnearJugador(NUM_PLAYERS);
         uiManager.activarUIMovimiento(this.jugadorActivo.GetComponent<PlayerController>());
+
+        PlayerController.onJailCard += siguienteTurno; //Evento jugador cae en ir a carcel 
+        PlayerManager.onLastPlayer += finishGame;
+        MoneyController.onBankrupt += playerBankrupt;
+        
     }
 
     public void spawnearJugador(int players)
@@ -54,10 +54,12 @@ public class TableManager : MonoBehaviour
     /// </summary>
     public void siguienteTurno(){
         jugadorActivo = playerManager.getNextPlayer();
+        while (cardManager.getJailCard().onJail(jugadorActivo))
+            jugadorActivo = playerManager.getNextPlayer();
         //jugadorActivo.transform.position = playerManager.getJugadorActivo().getPosicionEnCarta().obtenerLugarLibre();
         mainCamera.gameObject.GetComponent<CameraManager>().setNewActivePlayer(jugadorActivo.GetComponent<PlayerController>());
         uiManager.activarUIMovimiento(jugadorActivo.GetComponent<PlayerController>());
-        
+        onRoundFinished?.Invoke();
     }
 
 
@@ -70,7 +72,7 @@ public class TableManager : MonoBehaviour
 
     public void construirCasa()
     {
-        //@TODO
+        uiManager.activarUICompraCasa(this.jugadorActivo.GetComponent<PlayerController>());
     }
    
 
@@ -91,6 +93,11 @@ public class TableManager : MonoBehaviour
         }
     }
 
+    public void finishGame(PlayerController player)
+    {
+        //@TODO
+    }
+
 
     /// <summary>
     /// Función que simula lanzar dos dados de 6 caras y devuelve la suma de ambos
@@ -101,6 +108,11 @@ public class TableManager : MonoBehaviour
         return rnd.Next(1,6) + rnd.Next(1,6);
     }
 
+    private void playerBankrupt(PlayerController player)
+    {
+        this.playerManager.destroyPlayer(player);
+
+    }
     public PlayerController getActivePlayer()
     {
         return this.jugadorActivo.GetComponent<PlayerController>();
