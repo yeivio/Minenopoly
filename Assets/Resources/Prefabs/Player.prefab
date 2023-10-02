@@ -74,8 +74,8 @@ GameObject:
   - component: {fileID: 114862834696488258}
   - component: {fileID: 5832872395739379921}
   - component: {fileID: 5289825477894053134}
-  - component: {fileID: 6990698254473536186}
   - component: {fileID: 7003347951399884645}
+  - component: {fileID: 6990698254473536186}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -151,6 +151,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DEFAULT_PLAYER_MONEY: 0
+--- !u!114 &7003347951399884645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6643917052177745282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d0194c8b87e4624eac22264dc6f663c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6990698254473536186
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -178,13 +190,13 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11500000, guid: 9d7e3e88597c98249bf4dd3e47a515b9, type: 3}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 7003347951399884645}
+        m_TargetAssemblyTypeName: PlayerInputController, Assembly-CSharp
+        m_MethodName: onThrowDice
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -194,13 +206,13 @@ MonoBehaviour:
     m_ActionName: Player/Confirm[/Keyboard/enter,/XInputControllerWindows/buttonSouth]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5832872395739379921}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 7003347951399884645}
+        m_TargetAssemblyTypeName: PlayerInputController, Assembly-CSharp
+        m_MethodName: onSkipTurn
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -209,30 +221,74 @@ MonoBehaviour:
     m_ActionId: ec473a97-11cd-4899-bcb9-6dc77e9c21f0
     m_ActionName: Player/Cancel/Back[/Keyboard/backspace,/XInputControllerWindows/buttonEast]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7003347951399884645}
+        m_TargetAssemblyTypeName: PlayerInputController, Assembly-CSharp
+        m_MethodName: onTradeInterface
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 6d5abf76-1698-42ba-9434-83c841c08b94
     m_ActionName: MovementUI/Trade Cards[/XInputControllerWindows/buttonNorth,/Keyboard/t]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7003347951399884645}
+        m_TargetAssemblyTypeName: PlayerInputController, Assembly-CSharp
+        m_MethodName: onBuyStructures
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 41ed53c4-c980-42fc-92d0-6d53452634ae
     m_ActionName: MovementUI/Buy Structures[/XInputControllerWindows/buttonWest,/Keyboard/b]
-  m_NeverAutoSwitchControlSchemes: 0
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7003347951399884645}
+        m_TargetAssemblyTypeName: PlayerInputController, Assembly-CSharp
+        m_MethodName: onBuyCard
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 35f3d00a-93c6-414c-a9b3-f430e0eb6911
+    m_ActionName: BuyCardUI/BuyCard[/XInputControllerWindows/buttonSouth,/Keyboard/b]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7003347951399884645}
+        m_TargetAssemblyTypeName: PlayerInputController, Assembly-CSharp
+        m_MethodName: onSkipBuyCard
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 20e1adf2-5378-4865-b973-a09f46d61d72
+    m_ActionName: BuyCardUI/SkipCard[/XInputControllerWindows/buttonEast,/Keyboard/backspace]
+  m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: 
   m_DefaultActionMap: MovementUI
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &7003347951399884645
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6643917052177745282}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d0194c8b87e4624eac22264dc6f663c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &7083336694408534496
 GameObject:
   m_ObjectHideFlags: 0

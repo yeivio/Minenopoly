@@ -17,6 +17,7 @@ public class HouseBuildInterface : MonoBehaviour
 
     private TableManager tableManager;
 
+    public static event Action onCreation;
     public static event Action OnCancelled;
 
     private void Awake()
@@ -26,7 +27,7 @@ public class HouseBuildInterface : MonoBehaviour
         loadUI(activePlayer);
 
         ownerID = tableManager.getActivePlayer().getId();
-
+        onCreation?.Invoke();
     }
 
 

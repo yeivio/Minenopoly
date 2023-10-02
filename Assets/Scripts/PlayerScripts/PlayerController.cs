@@ -13,14 +13,14 @@ public class PlayerController : MonoBehaviour
     private Dictionary<String, List<PropertyCard>> listCardBought; //Cartas compradas
     public int CustomNumMov = 0; // Custom input for custom number of player movements
     [SerializeField] private GameObject gameModel; //Modelo del jugador
-
+    private ColorManager colorManager;
 
 
     private bool isJailed; //Player is jailed status
 
 
     [SerializeField] private Color colorPlayer;
-    Color[] listaColores = { Color.red, Color.black , Color.blue, Color.green, Color.grey, Color.magenta };
+    
 
     public static event Action<PlayerController> onFinishedMovement; //Evento para cuando acabe los movimientos
     public static event Action<PlayerController> onStartedMovement; //Evento para cuando empiece los movimientos
@@ -37,10 +37,8 @@ public class PlayerController : MonoBehaviour
         this.actualCard = cardManager.getFirstCard(); //Establecer variable posicion en primera carta
         this.listCardBought = new Dictionary<String, List<PropertyCard>>();
         this.isJailed = false;
-
-        System.Random random = new System.Random(); //@TODO Numeros aleatorios
-        int numeroAleatorio = random.Next(0, 6);
-        this.colorPlayer = listaColores[numeroAleatorio];
+        colorManager = new ColorManager();
+        this.colorPlayer = colorManager.getRandomColor();
         gameModel.GetComponent<Renderer>().material.color = this.colorPlayer;
     }
 

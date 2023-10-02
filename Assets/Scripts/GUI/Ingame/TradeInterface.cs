@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 public class TradeInterface : MonoBehaviour
 {
     public int activeNumber;
@@ -8,6 +9,8 @@ public class TradeInterface : MonoBehaviour
     public GameObject prefab;
 
     private float oldCanvasWidth, oldCanvasHeight;
+
+    public static event Action onCreation;
 
    void Start()
     {
@@ -23,6 +26,7 @@ public class TradeInterface : MonoBehaviour
             listObjects.Add(aux);
         }
 
+        onCreation?.Invoke();
 
     }
 

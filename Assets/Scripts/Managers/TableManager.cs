@@ -53,13 +53,13 @@ public class TableManager : MonoBehaviour
     /// Función para pasar al siguiente jugador activo.
     /// </summary>
     public void siguienteTurno(){
+        onRoundFinished?.Invoke();
         jugadorActivo = playerManager.getNextPlayer();
         while (cardManager.getJailCard().onJail(jugadorActivo))
             jugadorActivo = playerManager.getNextPlayer();
-        //jugadorActivo.transform.position = playerManager.getJugadorActivo().getPosicionEnCarta().obtenerLugarLibre();
         mainCamera.gameObject.GetComponent<CameraManager>().setNewActivePlayer(jugadorActivo.GetComponent<PlayerController>());
         uiManager.activarUIMovimiento(jugadorActivo.GetComponent<PlayerController>());
-        onRoundFinished?.Invoke();
+        
     }
 
 

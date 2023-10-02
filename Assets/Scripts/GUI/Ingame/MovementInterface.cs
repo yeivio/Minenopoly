@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using System;
 
 public class MovementInterface : MonoBehaviour
 {
@@ -12,12 +11,14 @@ public class MovementInterface : MonoBehaviour
     [SerializeField] private GameObject botonTrade;
     [SerializeField] private TextMeshProUGUI textoDinero;
     public int ownerID;
+    public static event Action onCreation;
 
     private void Awake()
     {
-        
+        Debug.Log("aparesco");
         tableManager = FindObjectOfType<TableManager>();
-        if (tableManager.getActivePlayer().GetComponent<PlayerController>().hasAllHouses())
+
+        if (tableManager.getActivePlayer().GetComponent<PlayerController>().hasAllHouses()) //Boton comprar casa
             this.botonComprarCasa.SetActive(true);
         else
             this.botonComprarCasa.SetActive(false);
@@ -25,12 +26,12 @@ public class MovementInterface : MonoBehaviour
         this.activePlayer = tableManager.getActivePlayer().GetComponent<MoneyController>();
         ownerID = tableManager.getActivePlayer().getId();
 
-        if (FindObjectOfType<UIManager>().hasAlreadyMoved())
+        if (FindObjectOfType<UIManager>().hasAlreadyMoved()) //Ya ha movido
             botonMover.SetActive(false);
 
         if (tableManager.getActivePlayer().GetComponent<PlayerController>().getPropertiesOwned().Count > 0)
             botonTrade.SetActive(false);
-
+        onCreation?.Invoke();
     }
 
     public void OnStartMovementButton()
@@ -41,8 +42,8 @@ public class MovementInterface : MonoBehaviour
 
     public void OnNextPlayerButton()
     {
-
         tableManager.siguienteTurno();
+        Debug.Log("Ahora me elimino");
         Destroy(this.gameObject);
     }
 
